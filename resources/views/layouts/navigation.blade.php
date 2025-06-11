@@ -4,6 +4,11 @@
             <!-- Logo -->
             <div class="flex items-center space-x-3">
                 <a href="{{ route('dashboard') }}" class="flex items-center text-2xl font-bold">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" class="mr-2">
+                        <circle cx="20" cy="20" r="16" fill="#FFF" />
+                        <circle cx="20" cy="20" r="16" stroke="#FFD600" stroke-width="8" />
+                        <path d="M14 21L19 26L27 16" stroke="#FFD600" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
                     <span class="text-[#BB7614] ml-2">ATM</span>
                 </a>
             </div>
