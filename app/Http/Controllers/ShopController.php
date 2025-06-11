@@ -32,6 +32,11 @@ class ShopController extends Controller
 
     public function store(Request $request)
     {
+        \Log::info('Shop create - Auth user', [
+            'Auth_id' => Auth::id(),
+            'Auth_user' => Auth::user(),
+            'Request_user' => $request->user(),
+        ]);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -44,6 +49,9 @@ class ShopController extends Controller
             'opening_time' => 'required|date_format:H:i',
             'closing_time' => 'required|date_format:H:i',
         ]);
+
+        $validated['user_id'] = Auth::id();
+        $validated['is_active'] = false;
 
         $shop = Shop::create($validated);
 
