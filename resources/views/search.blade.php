@@ -98,7 +98,7 @@
                     </div>
                     @empty
                     <div class="text-center text-gray-500 py-12">
-                        No shops found.
+                        No shops found
                     </div>
                     @endforelse
                 </div>
