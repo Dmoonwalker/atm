@@ -20,6 +20,16 @@
                 <a href="#" class="text-sm font-medium text-gray-700 hover:text-yellow-500">Feedback</a>
                 <a href="#" class="text-xl text-gray-700 hover:text-yellow-500">&#10084;</a>
                 <a href="#" class="text-xl text-gray-700 hover:text-yellow-500">&#8594;</a>
+                @auth
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                    @csrf
+                    <button type="submit" class="text-sm font-medium text-red-600 hover:text-red-800 bg-transparent border-none cursor-pointer ml-2">Logout</button>
+                </form>
+                @endauth
+                @guest
+                <a href="{{ route('login') }}" class="text-sm font-medium text-gray-700 hover:text-primary">Login</a>
+                <a href="{{ route('register') }}" class="text-sm font-medium text-gray-700 hover:text-primary">Register</a>
+                @endguest
             </div>
         </div>
     </div>
