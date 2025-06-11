@@ -45,8 +45,8 @@
                         <h1 class="section-title">Your Shop, Your Moment</h1>
                         <p class="text-xl mb-8 text-gray-600">
                             Display your products and services in real-time. Keep your customers updated and engaged with your business at all times.
-                        </p>
-                        <div class="space-x-4">
+        </p>
+        <div class="space-x-4">
                             <a href="{{ route('register') }}" class="btn-primary">Get Started</a>
                             <a href="#features" class="btn-outline">Learn More</a>
                         </div>

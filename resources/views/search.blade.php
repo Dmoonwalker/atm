@@ -110,10 +110,10 @@
                     @forelse($products as $product)
                     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex items-center gap-4 cursor-pointer hover:shadow-lg transition"
                         onclick="window.dispatchEvent(new CustomEvent('show-product', { detail: {
-                            name: '{{ e($product->name) }}',
-                            price: '{{ e($product->price) }}',
-                            shop_name: '{{ e($product->shop->name ?? '') }}',
-                            description: `{{ e($product->description) }}`,
+                            name: '{{ $product->name }}',
+                            price: '{{ $product->price }}',
+                            shop_name: '{{ $product->shop->name ?? '' }}',
+                            description: '{{ $product->description }}',
                             shop_url: '{{ route('shops.show', $product->shop) }}'
                         }}))">
                         <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
