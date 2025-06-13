@@ -9,7 +9,7 @@
             <h1 class="text-3xl font-bold mb-4 font-heading">Search Shops & Products</h1>
 
             <!-- Search Bar -->
-            <form method="GET" action="" class="mb-6">
+            <form method="GET" action="{{ route('search') }}" class="mb-6">
                 <div class="relative">
                     <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
                     <input type="text" name="search" placeholder="Search shops or products..."
@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="flex items-center text-red-500">
                                     <span class="mr-1">♥</span>
-                                    <span class="text-sm font-medium">{{ $shop->likes ?? rand(1,50) }}</span>
+                                    <span class="text-sm font-medium">{{ $shop->likes ?? 0 }}</span>
                                 </div>
                             </div>
                             <div class="space-y-1 mb-3">
@@ -79,7 +79,17 @@
                                 </div>
                                 <div class="flex gap-2">
                                     @foreach($shop->products->take(3) as $product)
-                                    <div class="w-8 h-8 bg-gray-200 rounded"></div>
+                                    <div class="w-8 h-8 bg-gray-200 rounded overflow-hidden">
+                                        @if($product->image_url)
+                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                        @else
+                                        <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                        @endif
+                                    </div>
                                     @endforeach
                                     @if($shop->products->count() > 3)
                                     <div class="w-8 h-8 bg-gray-300 rounded flex items-center justify-center text-xs font-medium text-gray-600">
@@ -103,17 +113,26 @@
                     @endforelse
                 </div>
             </div>
+
             <!-- Products List -->
             <div>
                 <h2 class="text-xl font-semibold mb-4 font-heading">Products</h2>
                 <div class="space-y-6">
                     @forelse($products as $product)
-                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex items-center gap-4 cursor-pointer hover:shadow-lg transition"
-                        onclick="window.dispatchEvent(new CustomEvent('show-product', { detail: { name: '{{ $product->name }}', price: '{{ $product->price }}', shop_name: '{{ $product->shop->name ?? '' }}', description: '{{ $product->description }}', shop_url: '{{ route('shops.show', $product->shop) }}' }}))">
-                        <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
-                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex items-center gap-4 cursor-pointer hover:shadow-lg transition product-card"
+                        data-product='{"name":"{{ addslashes($product->name) }}","price":"{{ $product->price }}","shop_name":"{{ addslashes($product->shop->name ?? '') }}","description":"{{ addslashes($product->description) }}","shop_url":"{{ route('shops.show', $product->shop) }}"}'>
+                        <div class="w-16 h-16 bg-gray-200 rounded overflow-hidden">
+                            @if($product->image_url)
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                            @elseif($product->image_path)
+                            <img src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                            @else
+                            <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            @endif
                         </div>
                         <div class="flex-1">
                             <div class="flex justify-between items-center mb-1">
@@ -137,3 +156,17 @@
     </div>
     </div>
 </x-app-layout>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Products:', JSON.parse('{{ json_encode($products) }}'));
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const productData = JSON.parse(this.dataset.product);
+                window.dispatchEvent(new CustomEvent('show-product', {
+                    detail: productData
+                }));
+            });
+        });
+    });
+</script>

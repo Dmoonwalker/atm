@@ -17,6 +17,19 @@ class ProductController extends Controller
     {
         $shop = Auth::user()->shops->first();
         $products = $shop ? $shop->products()->paginate(10) : collect();
+
+        // Debug log for products and their images
+        Log::info('Products in index:', [
+            'products' => $products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'image_url' => $product->image_url,
+                    'has_image' => !empty($product->image_url)
+                ];
+            })->toArray()
+        ]);
+
         return view('products.index', compact('products', 'shop'));
     }
 
@@ -27,7 +40,8 @@ class ProductController extends Controller
             return redirect()->route('shops.index')
                 ->with('error', 'You need to create a shop first.');
         }
-        return view('products.create', compact('shop'));
+        $categories = \App\Models\Category::all();
+        return view('products.create', compact('shop', 'categories'));
     }
 
     public function store(Request $request)
@@ -43,7 +57,7 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
-            'category' => 'nullable|string|max:255',
+            'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|max:2048', // 2MB max
         ]);
 
@@ -53,19 +67,24 @@ class ProductController extends Controller
         }
 
         $validated['shop_id'] = $shop->id;
-        $validated['is_available'] = true;
+        $validated['is_available'] = $request->has('is_available');
 
-        Product::create($validated);
-
-        return redirect()->route('products.index')
-            ->with('success', 'Product added successfully!');
+        try {
+            Product::create($validated);
+            return redirect()->route('shops.manage', $shop)
+                ->with('success', 'Product added successfully!');
+        } catch (\Exception $e) {
+            return back()->withInput()
+                ->with('error', 'Failed to add product. Please try again.');
+        }
     }
 
     public function edit(Product $product)
     {
         $this->authorize('update', $product);
         $shop = $product->shop;
-        return view('products.edit', compact('product', 'shop'));
+        $categories = \App\Models\Category::all();
+        return view('products.edit', compact('product', 'shop', 'categories'));
     }
 
     public function update(Request $request, Product $product)
@@ -77,7 +96,7 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
-            'category' => 'nullable|string|max:255',
+            'category_id' => 'required|exists:categories,id',
             'is_available' => 'boolean',
             'image' => 'nullable|image|max:2048', // 2MB max
         ]);
@@ -87,19 +106,25 @@ class ProductController extends Controller
             $validated['image_path'] = $path;
         }
 
-        $product->update($validated);
+        $validated['is_available'] = $request->has('is_available');
 
-        return redirect()->route('products.index')
-            ->with('success', 'Product updated successfully!');
+        try {
+            $product->update($validated);
+            return redirect()->route('shops.manage', $product->shop)
+                ->with('success', 'Product updated successfully!');
+        } catch (\Exception $e) {
+            return back()->withInput()
+                ->with('error', 'Failed to update product. Please try again.');
+        }
     }
 
     public function destroy(Product $product)
     {
-        \Log::info('Attempting to delete product: ' . $product->id);
+        Log::info('Attempting to delete product: ' . $product->id);
         $this->authorize('delete', $product);
         $shop = $product->shop;
         $product->delete();
-        \Log::info('Product deleted successfully');
+        Log::info('Product deleted successfully');
 
         return redirect()->route('shops.manage', $shop)
             ->with('success', 'Product deleted successfully!');

@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\TwoChatController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -35,9 +37,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/import-products', [ProfileController::class, 'importProducts'])->name('profile.import-products');
 
     // Search Routes
     Route::get('/search', [\App\Http\Controllers\SearchController::class, 'index'])->name('search');
+
+    // Feedback routes
+    Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+    Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('feedback.create');
+    Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+
+    // 2Chat Routes
+    Route::get('/2chat/products', [TwoChatController::class, 'getProducts'])->name('2chat.products');
 });
 
 require __DIR__ . '/auth.php';

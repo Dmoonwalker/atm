@@ -51,8 +51,8 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="h-10 w-10 flex-shrink-0">
-                                                @if($product->image_path)
-                                                <img class="h-10 w-10 rounded-full object-cover" src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}">
+                                                @if(!empty($product->image_url))
+                                                <img class="h-10 w-10 rounded-full object-cover" src="{{ $product->image_url }}" alt="{{ $product->name }}">
                                                 @else
                                                 <div class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
                                                     <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,4 +99,5 @@
             </div>
         </div>
     </div>
+
 </x-app-layout>

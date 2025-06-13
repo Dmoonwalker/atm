@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    '2chat' => [
+        'api_key' => env('TWOCHAT_API_KEY'),
+        'bearer_token' => env('TWOCHAT_BEARER_TOKEN'),
+        'from_number' => env('TWOCHAT_FROM_NUMBER'),
+    ],
+
 ];

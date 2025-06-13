@@ -16,8 +16,8 @@
             <div class="flex items-center space-x-8">
                 <a href="{{ route('dashboard') }}" class="text-sm font-medium text-secondary hover:text-primary {{ request()->routeIs('dashboard') ? 'font-bold underline' : '' }}">Home</a>
                 <a href="{{ route('search') }}" class="text-sm font-medium text-gray-700 hover:text-primary {{ request()->routeIs('search') ? 'font-bold underline' : '' }}">Search</a>
-                <a href="#" class="text-sm font-medium text-gray-700 hover:text-yellow-500">Account</a>
-                <a href="#" class="text-sm font-medium text-gray-700 hover:text-yellow-500">Feedback</a>
+                <a href="{{ route('profile.edit') }}" class="text-sm font-medium text-gray-700 hover:text-primary {{ request()->routeIs('profile.edit') ? 'font-bold underline' : '' }}">Account</a>
+                <a href="{{ route('feedback.create') }}" class="text-sm font-medium text-gray-700 hover:text-primary {{ request()->routeIs('feedback.*') ? 'font-bold underline' : '' }}">Feedback</a>
                 <a href="#" class="text-xl text-gray-700 hover:text-yellow-500">&#10084;</a>
                 <a href="#" class="text-xl text-gray-700 hover:text-yellow-500">&#8594;</a>
                 @auth

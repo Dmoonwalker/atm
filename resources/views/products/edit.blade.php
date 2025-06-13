@@ -38,9 +38,16 @@
                         </div>
 
                         <div>
-                            <x-input-label for="category" :value="__('Category')" />
-                            <x-text-input id="category" name="category" type="text" class="mt-1 block w-full" :value="old('category', $product->category)" required />
-                            <x-input-error class="mt-2" :messages="$errors->get('category')" />
+                            <x-input-label for="category_id" :value="__('Category')" />
+                            <select id="category_id" name="category_id" class="mt-1 block w-full border-gray-300 focus:border-[#FFC403] focus:ring-[#FFC403] rounded-md shadow-sm" required>
+                                <option value="">Select a category</option>
+                                @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                                @endforeach
+                            </select>
+                            <x-input-error class="mt-2" :messages="$errors->get('category_id')" />
                         </div>
 
                         <div>

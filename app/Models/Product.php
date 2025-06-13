@@ -14,7 +14,7 @@ class Product extends Model
         'description',
         'price',
         'stock_quantity',
-        'image_path',
+        'image_url',
         'shop_id',
         'is_available',
         'category_id',
@@ -30,4 +30,3 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 }
- 

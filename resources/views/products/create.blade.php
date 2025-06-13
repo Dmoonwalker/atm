@@ -40,9 +40,16 @@
                     </div>
 
                     <div>
-                        <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
-                        <input type="text" name="category" id="category" value="{{ old('category') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-[#FFC403] focus:ring-[#FFC403]" required>
-                        <x-input-error class="mt-2" :messages="$errors->get('category')" />
+                        <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
+                        <select name="category_id" id="category_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-[#FFC403] focus:ring-[#FFC403]" required>
+                            <option value="">Select a category</option>
+                            @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                            @endforeach
+                        </select>
+                        <x-input-error class="mt-2" :messages="$errors->get('category_id')" />
                     </div>
 
                     <div>

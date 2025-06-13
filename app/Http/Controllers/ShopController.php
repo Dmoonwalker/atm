@@ -32,7 +32,7 @@ class ShopController extends Controller
 
     public function store(Request $request)
     {
-        \Log::info('Shop create - Auth user', [
+        Log::info('Shop create - Auth user', [
             'Auth_id' => Auth::id(),
             'Auth_user' => Auth::user(),
             'Request_user' => $request->user(),
@@ -140,6 +140,25 @@ class ShopController extends Controller
     {
         $this->authorize('update', $shop);
         $shop->load(['category', 'products']);
+
+        // Log the products
+        Log::info('Products in shop manage:', [
+            'shop_id' => $shop->id,
+            'shop_name' => $shop->name,
+            'total_products' => $shop->products->count(),
+            'products' => $shop->products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'stock_quantity' => $product->stock_quantity,
+                    'is_available' => $product->is_available,
+                    'image_url' => $product->image_url,
+                    'image_path' => $product->image_path
+                ];
+            })->toArray()
+        ]);
+
         return view('shops.manage', compact('shop'));
     }
 }
