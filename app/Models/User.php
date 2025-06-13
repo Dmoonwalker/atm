@@ -307,4 +307,28 @@ class User extends Authenticatable
             $productData
         );
     }
+
+    /**
+     * Fetch products from TwoChat/WhatsApp
+     */
+    public function fetchProductsFromTwoChat()
+    {
+        try {
+            // Use the TwoChatService to fetch products
+            $twoChatService = app(TwoChatService::class);
+            $result = $twoChatService->getProducts($this->phone);
+
+            if (!$result['success']) {
+                throw new \Exception($result['error'] ?? 'Failed to fetch products from TwoChat');
+            }
+
+            return $result['products'] ?? [];
+        } catch (\Exception $e) {
+            Log::error('TwoChat product fetch failed', [
+                'user_id' => $this->id,
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
 }

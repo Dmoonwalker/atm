@@ -5,6 +5,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\TwoChatController;
+use App\Http\Controllers\WhatsAppController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -49,6 +50,10 @@ Route::middleware(['auth'])->group(function () {
 
     // 2Chat Routes
     Route::get('/2chat/products', [TwoChatController::class, 'getProducts'])->name('2chat.products');
+
+    // WhatsApp Product Import Routes
+    Route::get('/api/whatsapp/products', [WhatsAppController::class, 'fetchProducts'])->name('whatsapp.products');
+    Route::post('/api/whatsapp/import', [WhatsAppController::class, 'import'])->name('whatsapp.import');
 });
 
 require __DIR__ . '/auth.php';
