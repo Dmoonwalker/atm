@@ -62,3 +62,4 @@ class TestUsersSeeder extends Seeder
         }
     }
 }
+ 

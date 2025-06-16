@@ -53,7 +53,29 @@
 
                 <!-- Form Content -->
                 <div class="p-8">
-                    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+                    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8"
+                        x-data="{ 
+                            isDirty: false,
+                            originalValues: {
+                                name: '',
+                                description: '',
+                                price: '',
+                                stock_quantity: '',
+                                category_id: '',
+                                is_available: false
+                            },
+                            checkDirty() {
+                                this.isDirty = 
+                                    this.$refs.name.value !== this.originalValues.name ||
+                                    this.$refs.description.value !== this.originalValues.description ||
+                                    this.$refs.price.value !== this.originalValues.price ||
+                                    this.$refs.stock_quantity.value !== this.originalValues.stock_quantity ||
+                                    this.$refs.category_id.value !== this.originalValues.category_id ||
+                                    this.$refs.is_available.checked !== this.originalValues.is_available ||
+                                    this.$refs.image.files.length > 0;
+                            }
+                        }"
+                        @input="checkDirty">
                         @csrf
 
                         <!-- Basic Information Section -->
@@ -78,7 +100,7 @@
                                     </label>
                                     <input type="text" name="name" id="name" value="{{ old('name') }}"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all"
-                                        placeholder="Enter product name" required>
+                                        placeholder="Enter product name" required x-ref="name">
                                     <x-input-error class="mt-2" :messages="$errors->get('name')" />
                                 </div>
 
@@ -92,7 +114,7 @@
                                     </label>
                                     <input type="number" name="price" id="price" step="0.01" value="{{ old('price') }}"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all"
-                                        placeholder="0.00" required>
+                                        placeholder="0.00" required x-ref="price">
                                     <x-input-error class="mt-2" :messages="$errors->get('price')" />
                                 </div>
 
@@ -106,7 +128,7 @@
                                     </label>
                                     <input type="number" name="stock_quantity" id="stock_quantity" value="{{ old('stock_quantity') }}"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all"
-                                        placeholder="0" required>
+                                        placeholder="0" required x-ref="stock_quantity">
                                     <x-input-error class="mt-2" :messages="$errors->get('stock_quantity')" />
                                 </div>
 
@@ -119,7 +141,7 @@
                                         Category
                                     </label>
                                     <select name="category_id" id="category_id"
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all" required>
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all" required x-ref="category_id">
                                         <option value="">Select a category</option>
                                         @foreach($categories as $category)
                                         <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -149,7 +171,7 @@
                                 </label>
                                 <textarea name="description" id="description" rows="5"
                                     class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all"
-                                    placeholder="Describe your product in detail..." required>{{ old('description') }}</textarea>
+                                    placeholder="Describe your product in detail..." required x-ref="description">{{ old('description') }}</textarea>
                                 <p class="text-sm text-gray-500 mt-2">Provide a detailed description to help customers understand your product better.</p>
                                 <x-input-error class="mt-2" :messages="$errors->get('description')" />
                             </div>
@@ -180,7 +202,7 @@
                                             </svg>
                                         </div>
                                         <div>
-                                            <input type="file" id="image" name="image_url" accept="image/*" class="hidden" onchange="previewImage(this)">
+                                            <input type="file" id="image" name="image_url" accept="image/*" class="hidden" onchange="previewImage(this)" x-ref="image">
                                             <label for="image" class="cursor-pointer">
                                                 <span class="inline-flex items-center px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition-colors">
                                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -198,13 +220,13 @@
                                 <div id="imagePreview" class="hidden">
                                     <div class="relative inline-block">
                                         <img id="previewImg" class="w-32 h-32 object-cover rounded-xl border-4 border-white shadow-lg" src="/placeholder.svg" alt="Preview">
-                                        <button type="button" onclick="removeImage()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors">
-                                            ×
+                                        <button type="button" onclick="removeImage()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
                                         </button>
                                     </div>
                                 </div>
-
-                                <x-input-error class="mt-2" :messages="$errors->get('image')" />
                             </div>
                         </div>
 
@@ -221,7 +243,7 @@
 
                             <div class="flex items-center p-4 bg-white rounded-xl border border-green-200">
                                 <input type="checkbox" name="is_available" value="1" id="is_available"
-                                    class="h-5 w-5 rounded border-gray-300 text-emerald-600 shadow-sm focus:ring-emerald-500" checked>
+                                    class="h-5 w-5 rounded border-gray-300 text-emerald-600 shadow-sm focus:ring-emerald-500" checked x-ref="is_available">
                                 <label for="is_available" class="ml-3 text-sm font-medium text-gray-700">
                                     <span class="font-bold">Product is available for purchase</span>
                                     <div class="text-xs text-gray-500">Customers can see and purchase this product</div>
@@ -229,18 +251,15 @@
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
-                        <div class="flex justify-end space-x-4 pt-8 border-t border-gray-200">
-                            <a href="{{ route('shops.manage', $shop) }}" class="px-8 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors">
-                                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
+                        <!-- Form Actions -->
+                        <div class="flex items-center justify-end space-x-4 pt-8 border-t border-gray-200">
+                            <a href="{{ route('shops.manage', $shop) }}" class="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors">
                                 Cancel
                             </a>
-                            <button type="submit" class="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition-colors shadow-lg">
-                                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
+                            <button type="submit"
+                                x-bind:disabled="!isDirty"
+                                class="px-6 py-3 bg-emerald-500 text-white font-semibold rounded-xl transition-colors"
+                                :class="!isDirty ? 'opacity-50 cursor-not-allowed' : 'hover:bg-emerald-600'">
                                 Create Product
                             </button>
                         </div>

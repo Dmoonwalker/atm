@@ -6,28 +6,38 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
         Schema::create('shops', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->uuid('user_id');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('address');
-            $table->string('phone');
+            $table->string('logo')->nullable();
+            $table->string('banner')->nullable();
+            $table->string('address')->nullable();
+            $table->string('phone')->nullable();
             $table->string('email')->nullable();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->integer('likes')->default(0);
-            $table->time('opening_time')->nullable();
-            $table->time('closing_time')->nullable();
-            $table->string('state');
-            $table->string('local_government');
-            $table->boolean('is_active')->default(false);
+            $table->string('website')->nullable();
+            $table->json('social_media')->nullable();
+            $table->json('settings')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::dropIfExists('shops');
     }
