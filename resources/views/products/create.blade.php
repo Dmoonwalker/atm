@@ -54,7 +54,7 @@
 
                     <div>
                         <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
-                        <input type="file" id="image" name="image" accept="image/*" class="mt-1 block w-full">
+                        <input type="file" id="image" name="image_url" accept="image/*" class="mt-1 block w-full">
                         <x-input-error class="mt-2" :messages="$errors->get('image')" />
                     </div>
 

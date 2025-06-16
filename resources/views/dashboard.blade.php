@@ -98,15 +98,11 @@
                         <div class="flex items-center space-x-4">
                             <div class="flex items-center text-red-500">
                                 <span class="mr-1">♥</span>
-                                <span class="text-sm">{{ $shop->likes ?? 19 }}</span>
-                            </div>
-                            <div class="flex items-center text-gray-600">
-                                <span class="mr-1">👁</span>
-                                <span class="text-sm">{{ $shop->views ?? 200 }}</span>
+                                <span class="text-sm">{{ $shop->likes_count }}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="text-sm text-gray-500 mb-1">{{ $shop->categories ?? 'Snacks | Drinks' }}</div>
+                    <div class="text-sm text-gray-500 mb-1">{{ $shop->category->name }}</div>
                     <div class="text-sm text-gray-500 mb-4 flex items-center">
                         <span class="mr-1">📍</span> {{ $shop->address }}
                     </div>

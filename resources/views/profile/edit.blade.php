@@ -14,18 +14,18 @@
                         <div class="text-center mb-6">
                             <div class="relative inline-block">
                                 @if($user->profile_photo)
-                                <img src="{{ Storage::url($user->profile_photo) }}" alt="{{ $user->name }}" class="w-32 h-32 rounded-full object-cover">
+                                <img src="{{ $user->profile_photo }}" alt="{{ $user->name }}" class="w-32 h-32 rounded-full object-cover">
                                 @else
                                 <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center">
                                     <span class="text-4xl text-gray-400">{{ substr($user->name, 0, 1) }}</span>
                                 </div>
                                 @endif
-                                <button type="button" class="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-sm border border-gray-200 hover:bg-gray-50">
+                                <label for="profile_photo" class="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-sm border border-gray-200 hover:bg-gray-50 cursor-pointer">
                                     <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
-                                </button>
+                                </label>
                             </div>
                             <h2 class="mt-4 text-xl font-bold text-gray-900">{{ $user->name }}</h2>
                             <p class="text-sm text-gray-500">{{ $user->email }}</p>
@@ -96,7 +96,17 @@
 
                                 <div>
                                     <x-input-label for="profile_photo" :value="__('Profile Photo')" />
-                                    <input type="file" id="profile_photo" name="profile_photo" accept="image/*" class="mt-1 block w-full" />
+                                    <input type="file"
+                                        id="profile_photo"
+                                        name="profile_photo"
+                                        accept="image/*"
+                                        class="mt-1 block w-full text-sm text-gray-500
+                                                  file:mr-4 file:py-2 file:px-4
+                                                  file:rounded-full file:border-0
+                                                  file:text-sm file:font-semibold
+                                                  file:bg-[#FFC403] file:text-white
+                                                  hover:file:bg-[#E6B000]" />
+                                    <p class="mt-1 text-sm text-gray-500">PNG, JPG or JPEG (max. 2MB)</p>
                                     <x-input-error class="mt-2" :messages="$errors->get('profile_photo')" />
                                 </div>
 

@@ -6,17 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->renameColumn('image_path', 'image_url');
+            $table->softDeletes();
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->renameColumn('image_url', 'image_path');
+            $table->dropSoftDeletes();
         });
     }
 };

@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\TwoChatController;
 use App\Http\Controllers\WhatsAppController;
+use App\Http\Controllers\ShopLikeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -48,12 +49,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('feedback.create');
     Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
-    // 2Chat Routes
-    Route::get('/2chat/products', [TwoChatController::class, 'getProducts'])->name('2chat.products');
-
-    // WhatsApp Product Import Routes
-    Route::get('/api/whatsapp/products', [WhatsAppController::class, 'fetchProducts'])->name('whatsapp.products');
-    Route::post('/api/whatsapp/import', [WhatsAppController::class, 'import'])->name('whatsapp.import');
+    // Shop Likes
+    Route::post('/shops/{shop}/like', [ShopLikeController::class, 'toggle'])->name('shops.like.toggle');
+    Route::get('/shops/{shop}/like', [ShopLikeController::class, 'check'])->name('shops.like.check');
 });
 
 require __DIR__ . '/auth.php';

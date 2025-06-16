@@ -205,8 +205,8 @@ class User extends Authenticatable
             'name' => $product['name'] ?? '',
             'description' => $product['description'] ?? '',
             'price' => $product['price'] ?? 0,
-            'currency' => $product['currency'] ?? 'NGN',
-            'availability' => $product['availability'] ?? 'in_stock',
+            'stock_quantity' => $product['stock_quantity'] ?? 0,
+            'is_available' => true,
             'image_url' => $imageUrl,
             'source' => '2chat',
             'twochat_id' => $product['id'] ?? null

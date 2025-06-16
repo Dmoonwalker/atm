@@ -62,16 +62,18 @@ class ProfileController extends Controller
                         'user_id' => $request->user()->id,
                         'old_photo_path' => $request->user()->profile_photo
                     ]);
-                    Storage::delete($request->user()->profile_photo);
+                    $oldPath = str_replace('/storage/', '', $request->user()->profile_photo);
+                    Storage::disk('public')->delete($oldPath);
                 }
 
                 // Store new profile photo
                 $path = $request->file('profile_photo')->store('profile-photos', 'public');
-                $request->user()->profile_photo = $path;
+                $request->user()->profile_photo = Storage::url($path);
 
                 Log::info('New profile photo stored', [
                     'user_id' => $request->user()->id,
-                    'new_photo_path' => $path
+                    'new_photo_path' => $path,
+                    'new_photo_url' => Storage::url($path)
                 ]);
             }
 
@@ -117,7 +119,8 @@ class ProfileController extends Controller
                     'user_id' => $user->id,
                     'photo_path' => $user->profile_photo
                 ]);
-                Storage::delete($user->profile_photo);
+                $oldPath = str_replace('/storage/', '', $user->profile_photo);
+                Storage::disk('public')->delete($oldPath);
             }
 
             Auth::logout();

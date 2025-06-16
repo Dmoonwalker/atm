@@ -10,9 +10,16 @@ class DashboardController extends Controller
     public function index()
     {
         // Featured shops: top 4 active shops, ordered by most recently created
-        $featuredShops = Shop::where('is_active', true)->latest()->take(4)->get();
+        $featuredShops = Shop::with(['user', 'category', 'likes'])
+            ->where('is_active', true)
+            ->latest()
+            ->take(4)
+            ->get();
         // User's own shops
-        $myShops = Shop::where('user_id', Auth::id())->latest()->get();
+        $myShops = Shop::with(['user', 'category', 'likes'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
         return view('dashboard', [
             'featuredShops' => $featuredShops,
             'myShops' => $myShops,

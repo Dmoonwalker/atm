@@ -18,7 +18,7 @@
         this.success = null;
 
         try {
-            const response = await fetch('{{ route('whatsapp.import') }}', {
+            const response = await fetch('{{ route('profile.import-products') }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

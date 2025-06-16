@@ -41,8 +41,6 @@ class ShopController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'address' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'nullable|email|max:255',
             'category_id' => 'required|exists:categories,id',
             'state' => 'required|string|max:255',
             'local_government' => 'required|string|max:255',
@@ -104,7 +102,7 @@ class ShopController extends Controller
 
     public function index(Request $request)
     {
-        $query = Shop::with(['category', 'user', 'products']);
+        $query = Shop::with(['category', 'user', 'products', 'likes']);
 
         // Filter by category if selected
         if ($request->has('category')) {
@@ -132,7 +130,7 @@ class ShopController extends Controller
 
     public function show(Shop $shop)
     {
-        $shop->load(['user', 'category', 'products']);
+        $shop->load(['user', 'category', 'products', 'likes']);
         return view('shops.show', compact('shop'));
     }
 

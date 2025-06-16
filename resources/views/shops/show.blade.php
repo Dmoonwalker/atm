@@ -40,8 +40,37 @@
                         </div>
                     </div>
                     <div class="flex flex-col items-end space-y-2">
-                        <div class="flex items-center text-red-500 text-lg font-semibold">
-                            <span class="mr-1">&#10084;</span> {{ $shop->likes }}
+                        @php
+                        $isLiked = auth()->check() ? $shop->likedBy(auth()->user()) : false;
+                        @endphp
+                        <div class="flex items-center gap-2">
+                            <button
+                                x-data="{
+                                    liked: {{ $isLiked ? 'true' : 'false' }},
+                                    likesCount: {{ $shop->likes_count }},
+                                    async toggleLike() {
+                                        const response = await fetch('{{ route('shops.like.toggle', $shop) }}', {
+                                            method: 'POST',
+                                            headers: {
+                                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                                'Accept': 'application/json'
+                                            }
+                                        });
+                                        const data = await response.json();
+                                        this.liked = data.is_liked;
+                                        this.likesCount = data.likes_count;
+                                    }
+                                }"
+                                :class="liked ? 'text-red-500' : 'text-gray-400'"
+                                @click="toggleLike"
+                                class="focus:outline-none text-lg"
+                                title="Like this shop"
+                                type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
+                                </svg>
+                            </button>
+                            <span x-text="likesCount" class="text-lg font-semibold"></span>
                         </div>
                     </div>
                 </div>
@@ -76,9 +105,9 @@
                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                             @else
                             <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
+                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
                             </div>
                             @endif
                         </div>

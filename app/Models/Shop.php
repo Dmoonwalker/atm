@@ -49,12 +49,27 @@ class Shop extends Model
 
     public function isActive()
     {
-        return $this->likes >= 5;
+        return $this->likes()->count() >= 5;
     }
 
     public function updateActiveStatus()
     {
         $this->is_active = $this->isActive();
         $this->save();
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(ShopLike::class);
+    }
+
+    public function likedBy(User $user)
+    {
+        return $this->likes()->where('user_id', $user->id)->exists();
+    }
+
+    public function getLikesCountAttribute()
+    {
+        return $this->likes()->count();
     }
 }
