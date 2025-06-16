@@ -232,16 +232,9 @@
 
                 <!-- Products Tab -->
                 <div x-show="activeTab === 'products'" class="space-y-6">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center">
-                            <div class="p-2 bg-purple-500 rounded-lg mr-3">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                </svg>
-                            </div>
-                            <h3 class="text-2xl font-bold text-gray-900">Products Management</h3>
-                        </div>
-                        <a href="{{ route('products.create') }}" class="inline-flex items-center px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition-colors shadow-lg">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Products</h2>
+                        <a href="{{ route('shops.products.create', $shop) }}" class="inline-flex items-center px-4 py-2 bg-[#FFC403] text-[#BB7614] rounded-md hover:bg-[#FFD54F] transition-colors">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
@@ -297,7 +290,7 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div class="flex justify-end space-x-3">
-                                                <a href="{{ route('products.edit', $product) }}" class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
+                                                <a href="{{ route('shops.products.edit', [$shop, $product]) }}" class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
                                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                     </svg>
@@ -322,7 +315,7 @@
                                             </div>
                                             <h3 class="text-lg font-medium text-gray-900 mb-2">No products found</h3>
                                             <p class="text-gray-500 mb-4">Start building your inventory by adding your first product.</p>
-                                            <a href="{{ route('products.create') }}" class="inline-flex items-center px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition-colors">
+                                            <a href="{{ route('shops.products.create', $shop) }}" class="inline-flex items-center px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition-colors">
                                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                                 </svg>
@@ -457,7 +450,7 @@
         function confirmDelete(productId) {
             const modal = document.getElementById('deleteModal');
             const form = document.getElementById('deleteForm');
-            form.action = `/products/${productId}`;
+            form.action = `/shops/{{ $shop->id }}/products/${productId}`;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }

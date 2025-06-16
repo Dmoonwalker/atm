@@ -9,7 +9,27 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
-                    <form action="{{ route('products.update', $product) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                    <!-- Breadcrumb Navigation -->
+                    <nav class="mb-8 flex items-center space-x-2 text-sm">
+                        <a href="{{ route('dashboard') }}" class="text-emerald-600 hover:text-emerald-700 font-medium transition-colors">
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            Home
+                        </a>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <a href="{{ route('shops.products.index', $shop) }}" class="text-emerald-600 hover:text-emerald-700 font-medium transition-colors">
+                            {{ $shop->name }} Products
+                        </a>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-gray-700 font-semibold">Edit Product</span>
+                    </nav>
+
+                    <form action="{{ route('shops.products.update', [$shop, $product]) }}" method="POST" enctype="multipart/form-data" class="space-y-8" id="productForm">
                         @csrf
                         @method('PUT')
 
@@ -68,8 +88,14 @@
                             </label>
                         </div>
 
-                        <div class="flex justify-end">
-                            <a href="{{ route('shops.manage', $product->shop) }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors mr-3">Cancel</a>
+                        <!-- Action Buttons -->
+                        <div class="flex justify-end space-x-4 pt-8 border-t border-gray-200">
+                            <a href="{{ route('shops.products.index', $shop) }}" class="px-8 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors">
+                                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                                Go Back
+                            </a>
                             <button type="submit" class="px-4 py-2 bg-[#FFC403] text-[#BB7614] font-semibold rounded-md hover:bg-[#FFD54F] transition-colors">
                                 Update Product
                             </button>

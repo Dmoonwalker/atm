@@ -12,11 +12,12 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasUuids;
 
     /**
      * The attributes that are mass assignable.
@@ -63,6 +64,11 @@ class User extends Authenticatable
     public function shops()
     {
         return $this->hasMany(Shop::class);
+    }
+
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
     }
 
     public function importProductsFromTwoChat($shop)

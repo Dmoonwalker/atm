@@ -27,13 +27,13 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/shops/{shop}/qr', [ShopController::class, 'qr'])->name('shops.qr');
     // Route::get('/shops/{shop}/analytics', [ShopController::class, 'analytics'])->name('shops.analytics');
 
-    // Product Routes
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-    Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+    // Product Routes (nested under shops)
+    Route::get('/shops/{shop}/products', [ProductController::class, 'index'])->name('shops.products.index');
+    Route::get('/shops/{shop}/products/create', [ProductController::class, 'create'])->name('shops.products.create');
+    Route::post('/shops/{shop}/products', [ProductController::class, 'store'])->name('shops.products.store');
+    Route::get('/shops/{shop}/products/{product}/edit', [ProductController::class, 'edit'])->name('shops.products.edit');
+    Route::put('/shops/{shop}/products/{product}', [ProductController::class, 'update'])->name('shops.products.update');
+    Route::delete('/shops/{shop}/products/{product}', [ProductController::class, 'destroy'])->name('shops.products.destroy');
 
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

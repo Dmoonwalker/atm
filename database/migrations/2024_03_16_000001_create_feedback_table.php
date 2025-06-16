@@ -10,13 +10,13 @@ return new class extends Migration
     {
         Schema::create('feedback', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('email');
             $table->string('subject');
             $table->text('message');
             $table->enum('type', ['bug', 'feature', 'complaint', 'suggestion', 'other']);
-            $table->enum('status', ['pending', 'in_progress', 'resolved', 'closed'])->default('pending');
+            $table->string('status')->default('pending');
             $table->text('admin_response')->nullable();
             $table->timestamps();
         });

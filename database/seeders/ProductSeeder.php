@@ -143,12 +143,14 @@ class ProductSeeder extends Seeder
         ];
 
         $categoryIds = \App\Models\Category::pluck('id')->all();
+        $userId = \App\Models\User::first()->id;
         foreach ($products as $product) {
             $category_id = collect($categoryIds)->random();
             $productData = $product;
             unset($productData['category']);
             $productData['category_id'] = $category_id;
-            Product::create($productData);
+            $productData['user_id'] = $userId;
+            \App\Models\Product::create($productData);
         }
     }
 }

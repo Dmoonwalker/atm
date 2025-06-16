@@ -15,9 +15,8 @@ return new class extends Migration
             $table->string('address');
             $table->string('phone');
             $table->string('email')->nullable();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->integer('likes')->default(0);
             $table->time('opening_time')->nullable();
             $table->time('closing_time')->nullable();
             $table->string('state');
