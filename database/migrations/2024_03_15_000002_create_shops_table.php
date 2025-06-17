@@ -13,8 +13,6 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('address');
-            $table->string('phone');
-            $table->string('email')->nullable();
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->time('opening_time')->nullable();

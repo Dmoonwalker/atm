@@ -43,21 +43,6 @@
                     Feedback
                 </a>
 
-                <div class="flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200">
-                    <a href="#" class="flex items-center text-red-500 hover:text-red-600 transition-colors">
-                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                        </svg>
-                        <span class="text-sm font-medium">0</span>
-                    </a>
-
-                    <a href="#" class="flex items-center text-emerald-600 hover:text-emerald-700 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-                        </svg>
-                    </a>
-                </div>
-
                 @auth
                 <form method="POST" action="{{ route('logout') }}" class="inline">
                     @csrf

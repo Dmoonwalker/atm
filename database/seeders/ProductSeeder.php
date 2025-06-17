@@ -10,15 +10,20 @@ class ProductSeeder extends Seeder
 {
     public function run()
     {
+        $shops = Shop::all();
+        if ($shops->isEmpty()) {
+            $this->command->info('No shops found. Please run ShopSeeder first.');
+            return;
+        }
+
         $products = [
-            // Lagos Fresh Foods Products
+            // Fresh Foods Products
             [
                 'name' => 'Fresh Tomatoes',
                 'description' => 'Farm-fresh tomatoes from Oyo State',
                 'price' => 2500.00,
                 'stock_quantity' => 100,
                 'category' => 'Vegetables',
-                'shop_id' => 1,
             ],
             [
                 'name' => 'Green Plantain',
@@ -26,7 +31,6 @@ class ProductSeeder extends Seeder
                 'price' => 1500.00,
                 'stock_quantity' => 50,
                 'category' => 'Fruits',
-                'shop_id' => 1,
             ],
             [
                 'name' => 'Fresh Spinach',
@@ -34,17 +38,15 @@ class ProductSeeder extends Seeder
                 'price' => 800.00,
                 'stock_quantity' => 75,
                 'category' => 'Vegetables',
-                'shop_id' => 1,
             ],
 
-            // Abuja Fashion Hub Products
+            // Fashion Products
             [
                 'name' => 'Ankara Dress',
                 'description' => 'Beautiful handcrafted Ankara dress',
                 'price' => 25000.00,
                 'stock_quantity' => 10,
                 'category' => 'Clothing',
-                'shop_id' => 2,
             ],
             [
                 'name' => 'Beaded Necklace',
@@ -52,7 +54,6 @@ class ProductSeeder extends Seeder
                 'price' => 5000.00,
                 'stock_quantity' => 20,
                 'category' => 'Accessories',
-                'shop_id' => 2,
             ],
             [
                 'name' => 'Aso Oke Head Tie',
@@ -60,17 +61,15 @@ class ProductSeeder extends Seeder
                 'price' => 15000.00,
                 'stock_quantity' => 15,
                 'category' => 'Accessories',
-                'shop_id' => 2,
             ],
 
-            // Port Harcourt Tech Store Products
+            // Tech Products
             [
                 'name' => 'Samsung Galaxy A54',
                 'description' => 'Latest Samsung smartphone with 5G',
                 'price' => 250000.00,
                 'stock_quantity' => 5,
                 'category' => 'Phones',
-                'shop_id' => 3,
             ],
             [
                 'name' => 'Power Bank 20000mAh',
@@ -78,7 +77,6 @@ class ProductSeeder extends Seeder
                 'price' => 15000.00,
                 'stock_quantity' => 25,
                 'category' => 'Accessories',
-                'shop_id' => 3,
             ],
             [
                 'name' => 'Wireless Earbuds',
@@ -86,17 +84,15 @@ class ProductSeeder extends Seeder
                 'price' => 25000.00,
                 'stock_quantity' => 30,
                 'category' => 'Accessories',
-                'shop_id' => 3,
             ],
 
-            // Kano Spices Market Products
+            // Spices Products
             [
                 'name' => 'Suya Spice Mix',
                 'description' => 'Authentic Nigerian suya spice blend',
                 'price' => 2000.00,
                 'stock_quantity' => 50,
                 'category' => 'Spices',
-                'shop_id' => 4,
             ],
             [
                 'name' => 'Yaji Powder',
@@ -104,7 +100,6 @@ class ProductSeeder extends Seeder
                 'price' => 1500.00,
                 'stock_quantity' => 40,
                 'category' => 'Spices',
-                'shop_id' => 4,
             ],
             [
                 'name' => 'Curry Powder',
@@ -112,17 +107,15 @@ class ProductSeeder extends Seeder
                 'price' => 1000.00,
                 'stock_quantity' => 60,
                 'category' => 'Spices',
-                'shop_id' => 4,
             ],
 
-            // Ibadan Home Decor Products
+            // Home Decor Products
             [
                 'name' => 'Adire Cushion Covers',
                 'description' => 'Hand-dyed Adire fabric cushion covers',
                 'price' => 8000.00,
                 'stock_quantity' => 20,
                 'category' => 'Home Decor',
-                'shop_id' => 5,
             ],
             [
                 'name' => 'Wooden Carving',
@@ -130,7 +123,6 @@ class ProductSeeder extends Seeder
                 'price' => 15000.00,
                 'stock_quantity' => 8,
                 'category' => 'Art',
-                'shop_id' => 5,
             ],
             [
                 'name' => 'Batik Table Runner',
@@ -138,18 +130,20 @@ class ProductSeeder extends Seeder
                 'price' => 5000.00,
                 'stock_quantity' => 15,
                 'category' => 'Home Decor',
-                'shop_id' => 5,
             ],
         ];
 
         $categoryIds = \App\Models\Category::pluck('id')->all();
-        $userId = \App\Models\User::first()->id;
+
         foreach ($products as $product) {
             $category_id = collect($categoryIds)->random();
+            $shop = $shops->random();
+
             $productData = $product;
             unset($productData['category']);
             $productData['category_id'] = $category_id;
-            $productData['user_id'] = $userId;
+            $productData['shop_id'] = $shop->id;
+
             \App\Models\Product::create($productData);
         }
     }

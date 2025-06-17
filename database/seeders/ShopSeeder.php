@@ -13,15 +13,35 @@ class ShopSeeder extends Seeder
     public function run(): void
     {
         $users = User::all();
-        Log::info('Found users:', ['count' => $users->count()]);
+        Log::info('Starting ShopSeeder', [
+            'total_users' => $users->count(),
+            'users' => $users->pluck('id', 'email')->toArray()
+        ]);
+
+        if ($users->isEmpty()) {
+            Log::error('No users found in ShopSeeder');
+            return;
+        }
 
         $categories = Category::all();
+        Log::info('Categories found', [
+            'total_categories' => $categories->count(),
+            'categories' => $categories->pluck('id', 'name')->toArray()
+        ]);
+
+        if ($categories->isEmpty()) {
+            Log::error('No categories found in ShopSeeder');
+            return;
+        }
+
         $states = json_decode(file_get_contents(public_path('data/states.json')), true);
+        Log::info('States loaded', [
+            'total_states' => count($states)
+        ]);
 
         foreach ($users as $user) {
             Log::info('Creating shops for user:', [
                 'user_id' => $user->id,
-                'user_id_type' => gettype($user->id),
                 'user_email' => $user->email
             ]);
 
@@ -33,12 +53,10 @@ class ShopSeeder extends Seeder
                 $y = array_rand($states[$x]['lgas']);
 
                 try {
-                    $shop = Shop::create([
+                    $shopData = [
                         'name' => fake()->company(),
                         'description' => fake()->paragraph(),
                         'address' => fake()->streetAddress(),
-                        'phone' => fake()->phoneNumber(),
-                        'email' => fake()->companyEmail(),
                         'user_id' => $user->id,
                         'category_id' => $categories->random()->id,
                         'opening_time' => fake()->time('H:i'),
@@ -46,21 +64,32 @@ class ShopSeeder extends Seeder
                         'state' => $states[$x]['state'],
                         'local_government' => $states[$x]['lgas'][$y],
                         'is_active' => false,
-                    ]);
+                    ];
 
-                    Log::info('Created shop:', [
+                    Log::info('Attempting to create shop with data:', $shopData);
+
+                    $shop = Shop::create($shopData);
+
+                    Log::info('Successfully created shop:', [
                         'shop_id' => $shop->id,
-                        'user_id' => $shop->user_id,
-                        'user_id_type' => gettype($shop->user_id)
+                        'shop_name' => $shop->name,
+                        'user_id' => $shop->user_id
                     ]);
                 } catch (\Exception $e) {
                     Log::error('Failed to create shop:', [
                         'error' => $e->getMessage(),
+                        'error_trace' => $e->getTraceAsString(),
                         'user_id' => $user->id,
-                        'user_id_type' => gettype($user->id)
+                        'attempt' => $i + 1
                     ]);
                 }
             }
         }
+
+        // Verify shops were created
+        $totalShops = Shop::count();
+        Log::info('ShopSeeder completed', [
+            'total_shops_created' => $totalShops
+        ]);
     }
 }

@@ -13,8 +13,6 @@ class Shop extends Model
         'name',
         'description',
         'address',
-        'phone',
-        'email',
         'user_id',
         'category_id',
         'likes',

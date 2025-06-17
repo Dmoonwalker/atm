@@ -32,11 +32,15 @@ class ShopController extends Controller
 
     public function store(Request $request)
     {
-        Log::info('Shop create - Auth user', [
-            'Auth_id' => Auth::id(),
-            'Auth_user' => Auth::user(),
-            'Request_user' => $request->user(),
+        Log::info('Shop creation request received', [
+            'all_request_data' => $request->all(),
+            'auth_user' => Auth::user(),
+            'headers' => $request->headers->all(),
+            'method' => $request->method(),
+            'url' => $request->url(),
+            'ip' => $request->ip()
         ]);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -48,12 +52,36 @@ class ShopController extends Controller
             'closing_time' => 'required|date_format:H:i',
         ]);
 
+        Log::info('Validation passed', [
+            'validated_data' => $validated
+        ]);
+
         $validated['user_id'] = Auth::id();
-        $validated['is_active'] = false;
+        $validated['is_active'] = true;
 
-        $shop = Shop::create($validated);
+        try {
+            $shop = Shop::create($validated);
 
-        return response()->json(['message' => 'Shop created successfully'], 200);
+            Log::info('Shop created successfully', [
+                'shop_id' => $shop->id,
+                'shop_data' => $shop->toArray(),
+                'user_id' => Auth::id()
+            ]);
+
+            return redirect()->route('shops.manage', $shop)
+                ->with('success', 'Shop created successfully!');
+        } catch (\Exception $e) {
+            Log::error('Failed to create shop', [
+                'error' => $e->getMessage(),
+                'error_trace' => $e->getTraceAsString(),
+                'user_id' => Auth::id(),
+                'request_data' => $request->all()
+            ]);
+
+            return back()
+                ->withInput()
+                ->with('error', 'Failed to create shop. Please try again.');
+        }
     }
 
     public function edit(Shop $shop)
